@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyectos — Jessica Fuentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-2: #0d1224;
+    --surface: rgba(255,255,255,0.045);
+    --surface-hover: rgba(255,255,255,0.075);
+    --border: rgba(255,255,255,0.09);
+    --border-hover: rgba(120,160,255,0.5);
+    --text: #eef1f8;
+    --text-muted: #9aa4bd;
+    --text-faint: #626d8a;
+    --accent: #6d9bff;
+    --accent-2: #7dd3fc;
+    --accent-glow: rgba(109,155,255,0.35);
+    --pill-bg: rgba(109,155,255,0.12);
+    --pill-text: #9dc0ff;
+    --display-font: "Space Grotesk", -apple-system, sans-serif;
+    --body-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background: soft glow + fine grid */
+  .bg-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 600px at 12% -10%, var(--accent-glow), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(125,211,252,0.18), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 20%, transparent 75%);
+  }
+  .bg-dashboard {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, black 30%, transparent 85%);
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 940px; margin: 0 auto; padding: 72px 24px 80px; }
+
+  .backlink { display:inline-block; margin-bottom:26px; font-size:13px; font-weight:600; color:var(--accent-2); text-decoration:none; }
+  .backlink:hover { text-decoration:underline; }
+
+  .kicker {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent-2);
+    padding: 6px 14px 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    margin-bottom: 24px;
+  }
+  .kicker .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 10px var(--accent-2);
+  }
+
+  h1 {
+    font-family: var(--display-font);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.1rem);
+    line-height: 1.08;
+    margin: 0 0 18px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(100deg, var(--text) 30%, var(--accent) 75%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    margin: 0 0 56px;
+  }
+
+  .stack-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--accent-2);
+    margin: 0 0 14px;
+  }
+  .stack-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 56px; }
+  .stack-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 15px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .stack-pill.in-progress {
+    border-color: var(--border-hover);
+    color: var(--accent-2);
+    background: var(--pill-bg);
+  }
+  .stack-pill .status {
+    font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    opacity: 0.85; margin-left: 1px;
+  }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+
+  a.card {
+    position: relative;
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px 26px 22px;
+    text-decoration: none;
+    color: var(--text);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.22s cubic-bezier(.2,.8,.2,1), border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+    overflow: hidden;
+  }
+  a.card::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(420px circle at var(--mx,50%) var(--my,0%), var(--accent-glow), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  a.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
+    box-shadow: 0 12px 32px -8px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.15);
+  }
+  a.card:hover::before { opacity: 1; }
+
+  .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--accent-2);
+  }
+  .icon-badge {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    font-size: 16px;
+    box-shadow: 0 4px 14px var(--accent-glow);
+  }
+
+  a.card h2 {
+    font-family: var(--display-font);
+    font-size: 1.18rem;
+    font-weight: 600;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  a.card p.desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 0 0 18px;
+    min-height: 42px;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .tag {
+    font-size: 11px; font-weight: 600;
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--pill-text);
+  }
+
+  .go {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--accent-2);
+  }
+  .go svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+  a.card:hover .go svg { transform: translateX(4px); }
+
+  .placeholder {
+    border: 1.5px dashed var(--border);
+    border-radius: 18px;
+    padding: 26px;
+    color: var(--text-faint);
+    font-size: 0.85rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px;
+    text-align: center;
+    min-height: 190px;
+  }
+  .placeholder .plus {
+    width: 34px; height: 34px; border-radius: 10px;
+    border: 1.5px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: var(--text-faint);
+  }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  footer strong { color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-dashboard">
+  <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- línea de tendencia -->
+    <polyline points="60,420 180,360 300,400 420,300 540,340 660,220 780,260 900,160 1020,200 1140,120"
+      fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+    <polyline points="60,420 180,360 300,400 420,300 540,340 660,220 780,260 900,160 1020,200 1140,120 1140,560 60,560 Z"
+      fill="var(--accent)" opacity="0.06"/>
+    <!-- puntos sobre la línea -->
+    <g fill="var(--accent-2)" opacity="0.7">
+      <circle cx="180" cy="360" r="4"/><circle cx="420" cy="300" r="4"/><circle cx="660" cy="220" r="4"/>
+      <circle cx="900" cy="160" r="4"/><circle cx="1140" cy="120" r="5"/>
+    </g>
+    <!-- barras -->
+    <g opacity="0.4">
+      <rect x="80" y="600" width="26" height="90" rx="3" fill="var(--accent)"/>
+      <rect x="120" y="560" width="26" height="130" rx="3" fill="var(--accent-2)"/>
+      <rect x="160" y="620" width="26" height="70" rx="3" fill="var(--accent)"/>
+      <rect x="200" y="540" width="26" height="150" rx="3" fill="var(--accent-2)"/>
+      <rect x="240" y="580" width="26" height="110" rx="3" fill="var(--accent)"/>
+    </g>
+    <!-- anillo tipo KPI -->
+    <g transform="translate(1030,600)" opacity="0.5">
+      <circle r="70" fill="none" stroke="var(--border-hover)" stroke-width="14" opacity="0.25"/>
+      <circle r="70" fill="none" stroke="var(--accent-2)" stroke-width="14" stroke-linecap="round"
+        stroke-dasharray="330 440" transform="rotate(-90)"/>
+    </g>
+    <!-- puntos de dispersión -->
+    <g fill="var(--accent-2)" opacity="0.3">
+      <circle cx="520" cy="620" r="5"/><circle cx="560" cy="580" r="3"/><circle cx="610" cy="650" r="4"/>
+      <circle cx="650" cy="600" r="3"/><circle cx="700" cy="640" r="5"/><circle cx="740" cy="590" r="3"/>
+      <circle cx="790" cy="630" r="4"/><circle cx="850" cy="600" r="3"/>
+    </g>
+    <!-- líneas de cuadrícula sutiles tipo panel -->
+    <g stroke="var(--border)" stroke-width="1" opacity="0.4">
+      <line x1="60" y1="700" x2="1140" y2="700"/>
+      <line x1="60" y1="560" x2="1140" y2="560"/>
+    </g>
+  </svg>
+</div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <a class="backlink" href="index.html">&larr; Portafolio de certificados</a><br>
+  <span class="kicker"><span class="dot"></span>Portafolio de proyectos</span>
+  <h1>Proyectos de datos<br>con impacto real</h1>
+  <p class="subtitle">Casos de análisis, modelado y visualización de datos aplicados a contextos reales — desde bases de datos relacionales hasta dashboards interactivos.</p>
+
+  <p class="stack-label">Stack tecnológico</p>
+  <div class="stack-row">
+    <span class="stack-pill">🐍 Python</span>
+    <span class="stack-pill">🗄️ SQL / MySQL</span>
+    <span class="stack-pill">📊 Excel avanzado</span>
+    <span class="stack-pill">📈 Google Sheets</span>
+    <span class="stack-pill">🧰 Google Workspace</span>
+    <span class="stack-pill">📋 Asana / Trello</span>
+    <span class="stack-pill">📊 Power BI</span>
+    <span class="stack-pill">🌐 JavaScript</span>
+    <span class="stack-pill">☁️ Supabase</span>
+  </div>
+
+  <div class="grid">
+
+    <a class="card" href="casa-tintin.html" onmousemove="const r=this.getBoundingClientRect();this.style.setProperty('--mx',(event.clientX-r.left)+'px');this.style.setProperty('--my',(event.clientY-r.top)+'px');">
+      <div class="card-top">
+        <span class="eyebrow">Bases de datos</span>
+        <span class="icon-badge">🗄️</span>
+      </div>
+      <h2>Casa Tintín — Base de datos relacional</h2>
+      <p class="desc">Diseño e implementación de un modelo de datos para unificar inventario y ventas de una pyme multicanal.</p>
+      <div class="tags">
+        <span class="tag">MySQL</span>
+        <span class="tag">Modelado ER</span>
+        <span class="tag">SQL</span>
+      </div>
+      <span class="go">Ver proyecto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="casa-tintin-gestion.html" onmousemove="const r=this.getBoundingClientRect();this.style.setProperty('--mx',(event.clientX-r.left)+'px');this.style.setProperty('--my',(event.clientY-r.top)+'px');">
+      <div class="card-top">
+        <span class="eyebrow">Aplicación web · Full-stack</span>
+        <span class="icon-badge">🛒</span>
+      </div>
+      <h2>Casa Tintín — Gestión de tienda</h2>
+      <p class="desc">Aplicación que reúne inventario, ventas, compras y cupones, y sincroniza el catálogo y la tienda WooCommerce sin subir archivos a mano.</p>
+      <div class="tags">
+        <span class="tag">JavaScript</span>
+        <span class="tag">Supabase</span>
+        <span class="tag">WooCommerce</span>
+      </div>
+      <span class="go">Ver proyecto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="tiktok-claims.html" onmousemove="const r=this.getBoundingClientRect();this.style.setProperty('--mx',(event.clientX-r.left)+'px');this.style.setProperty('--my',(event.clientY-r.top)+'px');">
+      <div class="card-top">
+        <span class="eyebrow">Análisis de datos · Python</span>
+        <span class="icon-badge">📊</span>
+      </div>
+      <h2>TikTok — Clasificación de afirmaciones y opiniones</h2>
+      <p class="desc">Preparación de un dataset de 19.382 videos para un modelo que ayuda a moderadores a distinguir afirmaciones de opiniones, con Python, pandas y el flujo PACE.</p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">pandas</span>
+        <span class="tag">PACE</span>
+      </div>
+      <span class="go">Ver proyecto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="waze-churn.html" onmousemove="const r=this.getBoundingClientRect();this.style.setProperty('--mx',(event.clientX-r.left)+'px');this.style.setProperty('--my',(event.clientY-r.top)+'px');">
+      <div class="card-top">
+        <span class="eyebrow">Análisis de datos · Python</span>
+        <span class="icon-badge">📈</span>
+      </div>
+      <h2>Waze — Predicción de abandono de usuarios</h2>
+      <p class="desc">Inspección y organización de un dataset de 14.999 usuarios previo a un modelo que predice el abandono mensual (churn), con Python, pandas y el flujo PACE.</p>
+      <div class="tags">
+        <span class="tag">Python</span>
+        <span class="tag">pandas</span>
+        <span class="tag">PACE</span>
+      </div>
+      <span class="go">Ver proyecto
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <div class="placeholder">
+      <div class="plus">+</div>
+      Próximo proyecto<br>(ej. dashboard interactivo de análisis de caso)
+    </div>
+
+  </div>
+
+  <footer>
+    <span><strong>Jessica Fuentes</strong> · Analista de Datos</span>
+  </footer>
+</div>
+</body>
+</html>

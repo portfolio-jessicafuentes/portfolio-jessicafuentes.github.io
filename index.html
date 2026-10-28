@@ -43,6 +43,13 @@
   h2.sec{margin:0;font-family:var(--serif);font-weight:600;font-size:40px;letter-spacing:-.015em}
   #tally{font-family:var(--mono);font-size:13px;color:var(--text-muted)}
   .month{margin-top:36px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding-bottom:10px;border-bottom:2px solid var(--ink)}
+  .route-n{flex:0 0 56px;font-family:var(--serif);font-style:italic;font-size:22px;color:var(--accent)}
+  .mods{list-style:none;margin:-4px 0 14px 56px;padding:0 0 0 14px;border-left:2px solid var(--border);font-size:13px;line-height:1.5;color:var(--text-muted)}
+  .mods li{padding:2px 0}
+  .cgrp{border-bottom:1px solid var(--border)}
+  .cgrp .row{border-bottom:none}
+  .cgrp .mods{margin-top:-6px;margin-bottom:16px}
+  @media (max-width:760px){.route-n{flex:0 0 28px;font-size:18px}.mods{margin-left:28px}}
   .lang{margin-top:32px;display:inline-block;font-family:var(--serif);font-weight:600;font-size:22px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
   .row{border-bottom:1px solid var(--border)}
   .row-btn{width:100%;display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;padding:20px 0;border:none;background:transparent;text-align:left;color:var(--text)}
@@ -251,6 +258,33 @@
         out += `<div class="lang">${FLAGS[lang] || ''} ${lang}</div>` + g.map(rowHtml).join('');
       });
       out += filtered.filter(c => !order.includes(c.language)).map(rowHtml).join('');
+      list.innerHTML = out;
+    } else if (activeSubject === 'Inteligencia Artificial') {
+      const ROUTE = '7 cursos de uso de IA Generativa para mipymes';
+      const COURSES = ['Conoce la IAGen para pymes','Dirige a la IAGen usando prompts','Analiza y mejora tus procesos con IAGen','Diseña campañas de marketing con IAGen','Gestiona tus procesos logísticos con IAGen','Expande tu negocio con IAGen','Usa la IA Generativa de manera responsable y ética'];
+      const route = filtered.find(c => c.title === ROUTE);
+      const courses = COURSES.map(t => filtered.find(c => c.title === t)).filter(Boolean);
+      let out = '';
+      if (route) {
+        out += `<div class="lang">Ruta de aprendizaje</div>` + rowHtml(route);
+        out += `<div class="lang" style="font-size:18px;margin-top:20px">Cursos de la ruta</div>`;
+        courses.forEach((c, i) => {
+          out += '<div class="cgrp">' + rowHtml(c).replace('<span class="r-date">', '<span class="route-n">' + (i + 1) + '</span><span class="r-date" style="display:none">').replace(/<\/button>/, '</button>');
+          if (c.modules && c.modules.length) out += `<ul class="mods">` + c.modules.map(m => `<li>${escapeHtml(m)}</li>`).join('') + `</ul>`;
+          out += '</div>';
+        });
+      }
+      const used = new Set([route, ...courses]);
+      const rest = filtered.filter(c => !used.has(c));
+      if (rest.length) {
+        out += `<div class="lang" style="margin-top:36px">Otros certificados</div>`;
+        let cur = '';
+        rest.forEach(c => {
+          const p = dparts(c.date), key = p.y + '-' + p.m;
+          if (key !== cur) { cur = key; out += `<div class="month">${MONTHS[p.m]} ${p.y}</div>`; }
+          out += rowHtml(c);
+        });
+      }
       list.innerHTML = out;
     } else {
       let out = '', cur = '';
